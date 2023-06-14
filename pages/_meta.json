@@ -1,15 +1,12 @@
 {
   "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
+  "another": "Example Page",
+  "npm_packages": "NPM Packages",
+  "useful_website": "Useful Website",
   "contact": {
-    "title": "Contact ↗",
+    "title": "Hire me ↗",
     "type": "page",
-    "href": "https://twitter.com/shuding_",
+    "href": "https://freelancer.com/u/jahedul31",
     "newWindow": true
   }
 }

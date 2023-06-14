@@ -1,0 +1,22 @@
+import { Steps } from "nextra-theme-docs";
+
+# React Query
+
+```html copy /npm/
+npm i @tanstack/react-query
+```
+
+```html copy /pnpm/
+pnpm add @tanstack/react-query
+```
+
+```html copy /yarn/
+yarn add @tanstack/react-query
+```
+
+### How to implement ?
+
+Create a Custom Query Client Provider.
+By default, all components in Next.js 13 are rendered on the server but React Query doesn’t work with Server Components. Therefore, we need to create a custom provider that will render the QueryClientProvider within a Client Component.
+To ensure that the custom provider component only renders on the client-side, we can add <b>"use client";</b> at the top of the file. This tells the server to skip rendering the custom provider component and render it only on the client-side.
+To create this component, navigate to the ‘src‘ directory and create a new folder named ‘utils‘. Inside the ‘utils‘ folder, create a file named provider.tsx and add the following code.
