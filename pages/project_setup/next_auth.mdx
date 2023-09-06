@@ -1,0 +1,173 @@
+# Setup Next Auth
+
+To setup next auth in nextjs 13 we need to follow this steps.
+
+### Step 1 ( Install )
+
+```html copy /pnpm/
+pnpm add next-auth
+```
+
+### Add API route
+
+To add NextAuth.js to a project create a file called [...nextauth].js in pages/api/auth. This contains the dynamic route handler for NextAuth.js which will also contain all of your global NextAuth.js configurations.
+
+### Route.ts File Setup
+
+`/app/api/auth/[...nextauth]/route.ts`
+
+```html copy
+auth/[...nextauth]/route.ts
+```
+
+```js copy
+import NextAuth from "next-auth";
+import { options } from "./options";
+
+const handler = NextAuth(options);
+
+export { handler as GET, handler as POST };
+```
+
+### Option.ts File Setup
+
+```html copy
+auth/[...nextauth]/option.ts
+```
+
+```js copy
+import type { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials"
+
+export const options : NextAuthOptions = {
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "Username"
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "Password"
+        }
+      },
+      // @ts-ignore
+      async authorize(credentials) {
+        const user = {id : 10, name: "emons", password: "emons"}
+
+        if(credentials?.username === user.name){
+          return user
+        }else{
+          return null
+        }
+      },
+    })
+  ],
+  pages: {
+    signIn: "/sign-in"
+  },
+  session:{
+    strategy: "jwt"
+  },
+  callbacks:{
+    session:({session,token})=>{
+      return {
+        ...session,
+        user:{
+          ...session.user,
+          id: token.name
+        }
+      }
+    },
+    //@ts-ignore
+    jwt:({token,user})=>{
+      if(user){
+        const u = user as unknown as any;
+        return {
+          ...token,
+          id:token.name
+        }
+        return token
+      }
+    }
+  }
+}
+```
+
+### Middlewere Page setup
+
+```js copy
+export { default } from "next-auth/middleware";
+
+export const config = {
+ matcher: ["/dashboard", "/add-work", "/add-blog"],
+};
+```
+
+### Sign-in Page Setup
+
+```js copy
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+
+const SignInPage = () => {
+ const [userName, setUserName] = useState < string > "";
+ const [password, setPassword] = useState < string > "";
+
+ const handleSubmit = async (event: React.FormEvent) => {
+  event.preventDefault();
+
+  signIn("credentials", {
+   username: userName,
+   password,
+   callbackUrl: "/dashboard",
+  });
+ };
+
+ return (
+  <>
+   <div className="grid place-content-center bg-emon-light min-h-screen">
+    <div className="w-screen md:w-[400px] space-y-3 items-center gap-1.5 p-10 bg-white rounded-xl shadow-lg">
+     <h1 className="text-xl font-bold">Welcome, Back Admin</h1>
+     <form onSubmit={handleSubmit}>
+      <div>
+       <Label htmlFor="username">Username</Label>
+       <Input
+        type="username"
+        id="username"
+        placeholder="Enter username"
+        onChange={(e) => setUserName(e.target.value)}
+       />
+      </div>
+      <div>
+       <Label htmlFor="password">Password</Label>
+       <Input
+        type="password"
+        id="password"
+        placeholder="Enter Password"
+        onChange={(e) => setPassword(e.target.value)}
+       />
+      </div>
+      <Button type="submit" className="mt-3">
+       Log In
+      </Button>
+     </form>
+    </div>
+   </div>
+  </>
+ );
+};
+
+export default SignInPage;
+```
+
+### Sign Up Page Setup
