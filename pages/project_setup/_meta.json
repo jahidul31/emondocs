@@ -1,5 +1,5 @@
 {
   "github": "Github Setup",
-  "next_auth": "Next Auth Setup",
-  "nextjs_setup": "Create Nextjs Project"
+  "nextauth": "Next Auth Setup",
+  "nextsetup": "Create Nextjs Project"
 }
